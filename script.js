@@ -265,9 +265,13 @@ function escrever_tabela(json_linhas_selecionadas){
     
     // Lista de cabeçalhos sem a coluna 'Posto'
     let cabecalhos = ['Linha', 'Emp', 'Tab', 'Início', 'Carro', 'Horário Real'];
-    cabecalhos.forEach((texto) => {
+    cabecalhos.forEach((texto, index) => {
         let celula = th.insertCell();
         celula.innerText = texto;
+        // Se a célula for a de "Posto", adicione a classe para escondê-la
+        if (texto === 'Posto') {
+            celula.classList.add('hide-posto');
+        }
     });
 
     // Aplicando a classe para fixar o cabeçalho
