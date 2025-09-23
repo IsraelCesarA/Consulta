@@ -80,7 +80,7 @@ body.dark-theme {
 }
 
 #table_div table {
-    width: 100%;
+    width: 90%;
     border-collapse: collapse;
     min-width: 600px; /* Garante que a tabela tenha uma largura mínima para a rolagem */
 }
@@ -121,7 +121,7 @@ body.dark-theme {
     height: 10px;
     width: 10px;
     background-color: red;
-    border-radius: 50%;
+    border-radius: 40%;
     display: inline-block;
     margin-left: 5px;
 }
@@ -157,6 +157,7 @@ body.dark-theme {
         width: 70px;
     }
 }
+
 
 
 
