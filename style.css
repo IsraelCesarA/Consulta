@@ -17,7 +17,7 @@ body.dark-theme {
 
 .container {
     width: 100%;
-    max-width: 900px;
+    max-width: 600px; /* Reduzido para melhorar a visualização */
     padding: 10px;
 }
 
@@ -82,7 +82,7 @@ body.dark-theme {
 #table_div table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 600px;
+    min-width: 550px; /* Reduzido para acomodar melhor */
 }
 
 #table_div thead th {
@@ -132,11 +132,11 @@ body.dark-theme {
 }
 
 .veiculo-input {
-    width: 55px; /* Ajuste para melhor visualização */
+    width: 55px; 
 }
 
 .real-time-input {
-    width: 75px; /* Ajuste para melhor visualização */
+    width: 75px; 
 }
 
 /* Otimização para telas menores (celulares) */
