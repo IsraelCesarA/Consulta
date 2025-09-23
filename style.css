@@ -1,6 +1,6 @@
 /* Estilos gerais */
 body {
-    display: center;
+    display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
@@ -82,7 +82,7 @@ body.dark-theme {
 #table_div table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 550px;
+    min-width: 450px; /* Reduzido o mínimo para caber mais na tela */
 }
 
 #table_div thead th {
@@ -100,11 +100,7 @@ body.dark-theme {
     white-space: nowrap;
 }
 
-/* Regras para esconder colunas em dispositivos móveis */
-.hide-posto,
-.hide-on-mobile {
-    display: none;
-}
+/* As classes `hide-posto` e `hide-on-mobile` foram removidas */
 
 #table_div tr:nth-child(even) {
     background-color: #f9f9f9;
@@ -132,12 +128,13 @@ body.dark-theme {
     margin-left: 5px;
 }
 
+/* Ajustes de largura para os campos e colunas */
 .veiculo-input {
-    width: 55px;
+    width: 40px; /* Reduzido */
 }
 
 .real-time-input {
-    width: 75px;
+    width: 65px; /* Reduzido */
 }
 
 /* Otimização para telas menores (celulares) */
@@ -156,23 +153,10 @@ body.dark-theme {
     }
 
     .veiculo-input {
-        width: 50px;
+        width: 40px; /* Reduzido para o celular */
     }
 
     .real-time-input {
-        width: 70px;
-    }
-
-    /* Oculta as colunas Emp e Tab apenas em celulares */
-    #table_div th:nth-child(2),
-    #table_div td:nth-child(2),
-    #table_div th:nth-child(3),
-    #table_div td:nth-child(3) {
-        display: none;
-    }
-
-    /* Reduz o min-width para não ter barra de rolagem horizontal */
-    #table_div table {
-        min-width: 300px;
+        width: 65px; /* Reduzido para o celular */
     }
 }
