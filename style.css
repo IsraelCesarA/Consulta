@@ -1,6 +1,6 @@
 /* Estilos gerais */
 body {
-    display: center;
+    display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
@@ -131,12 +131,13 @@ body.dark-theme {
     margin-left: 5px;
 }
 
+/* Ajuste na largura dos campos para melhor visualização */
 .veiculo-input {
-    width: 60px;
+    width: 45px;
 }
 
 .real-time-input {
-    width: 80px;
+    width: 75px;
 }
 
 /* Otimização para telas menores (celulares) */
@@ -155,10 +156,10 @@ body.dark-theme {
     }
 
     .veiculo-input {
-        width: 50px;
+        width: 40px;
     }
 
     .real-time-input {
-        width: 70px;
+        width: 65px;
     }
 }
