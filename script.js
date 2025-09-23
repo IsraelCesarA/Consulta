@@ -263,14 +263,11 @@ function escrever_tabela(json_linhas_selecionadas){
     let thead = tabela.createTHead();
     let th = thead.insertRow();
     
-    let cabecalhos = ['Linha', 'Emp', 'Tab', 'Posto', 'Início', 'Carro', 'Horário Real'];
-    cabecalhos.forEach((texto, index) => {
+    // Lista de cabeçalhos sem a coluna 'Posto'
+    let cabecalhos = ['Linha', 'Emp', 'Tab', 'Início', 'Carro', 'Horário Real'];
+    cabecalhos.forEach((texto) => {
         let celula = th.insertCell();
         celula.innerText = texto;
-        // Se a célula for a de "Posto", adicione a classe para escondê-la
-        if (texto === 'Posto') {
-            celula.classList.add('hide-posto');
-        }
     });
 
     // Aplicando a classe para fixar o cabeçalho
@@ -301,11 +298,6 @@ function escrever_tabela(json_linhas_selecionadas){
         tr.insertCell().innerText = item.linha;
         tr.insertCell().innerText = item.empresa;
         tr.insertCell().innerText = item.tabela;
-        
-        // Célula do posto: adicione o valor e a classe para esconder
-        let postoCell = tr.insertCell();
-        postoCell.innerText = item.postoControle;
-        postoCell.classList.add('hide-posto');
         
         const scheduledTime = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate(), item.horario.split(':')[0], item.horario.split(':')[1], 0);
         
