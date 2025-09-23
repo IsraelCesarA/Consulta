@@ -2,12 +2,12 @@
 body {
     display: flex;
     justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    max-width:1200px;
+    min-height: 100dvh;
     background-color: #f8f9fa;
     color: #000;
     font-family: Arial, sans-serif;
-    margin: 0;
+    margin: auto;
 }
 
 body.dark-theme {
@@ -17,17 +17,26 @@ body.dark-theme {
 
 .container {
     width: 100%;
-    max-width: 600px;
+    
     padding: 10px;
+}
+
+#menu{
+    padding:10px;
+
 }
 
 /* Estilos para o menu e seletor */
 #select_div {
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .form-floating > label {
     padding: 1rem 0.75rem;
+}
+
+#check_list{
+    padding-bottom: 10px;
 }
 
 /* Estilos do loader */
@@ -76,7 +85,7 @@ body.dark-theme {
 /* Estilos para a tabela de horários */
 #table_div {
     overflow-x: auto;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 #table_div table {
@@ -159,4 +168,9 @@ body.dark-theme {
     .real-time-input {
         width: 65px; /* Reduzido para o celular */
     }
+    #consultar{
+        margin-left: 5%;
+        width: 90%;
+    }
+    
 }
