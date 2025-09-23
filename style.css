@@ -80,9 +80,9 @@ body.dark-theme {
 }
 
 #table_div table {
-    width: 90%;
+    width: 100%;
     border-collapse: collapse;
-    min-width: 600px; /* Garante que a tabela tenha uma largura mínima para a rolagem */
+    min-width: 600px;
 }
 
 #table_div thead th {
@@ -98,6 +98,11 @@ body.dark-theme {
     text-align: left;
     font-size: 0.85em;
     white-space: nowrap;
+}
+
+/* Nova regra para esconder a coluna "Posto" */
+.hide-posto {
+    display: none;
 }
 
 #table_div tr:nth-child(even) {
@@ -121,7 +126,7 @@ body.dark-theme {
     height: 10px;
     width: 10px;
     background-color: red;
-    border-radius: 40%;
+    border-radius: 50%;
     display: inline-block;
     margin-left: 5px;
 }
@@ -135,7 +140,7 @@ body.dark-theme {
 }
 
 /* Otimização para telas menores (celulares) */
-@media (max-width: 500px) {
+@media (max-width: 576px) {
     .container {
         padding: 5px;
     }
@@ -157,7 +162,3 @@ body.dark-theme {
         width: 70px;
     }
 }
-
-
-
-
