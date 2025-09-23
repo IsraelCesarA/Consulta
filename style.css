@@ -13,7 +13,7 @@ body.dark-theme {
 }
 
 .container {
-    max-width: 900px;
+    max-width: 800px;
     padding: 10px;
 }
 
@@ -155,4 +155,5 @@ body.dark-theme {
         width: 70px;
     }
 }
+
 
