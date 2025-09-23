@@ -1,6 +1,6 @@
 /* Estilos gerais */
 body {
-    display: flex;
+    display: center;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
@@ -17,7 +17,7 @@ body.dark-theme {
 
 .container {
     width: 100%;
-    max-width: 600px; /* Reduzido para melhorar a visualização */
+    max-width: 600px;
     padding: 10px;
 }
 
@@ -82,7 +82,7 @@ body.dark-theme {
 #table_div table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 550px; /* Reduzido para acomodar melhor */
+    min-width: 550px;
 }
 
 #table_div thead th {
@@ -100,8 +100,9 @@ body.dark-theme {
     white-space: nowrap;
 }
 
-/* Nova regra para esconder a coluna "Posto" */
-.hide-posto {
+/* Regras para esconder colunas em dispositivos móveis */
+.hide-posto,
+.hide-on-mobile {
     display: none;
 }
 
@@ -132,11 +133,11 @@ body.dark-theme {
 }
 
 .veiculo-input {
-    width: 55px; 
+    width: 55px;
 }
 
 .real-time-input {
-    width: 75px; 
+    width: 75px;
 }
 
 /* Otimização para telas menores (celulares) */
@@ -160,5 +161,18 @@ body.dark-theme {
 
     .real-time-input {
         width: 70px;
+    }
+
+    /* Oculta as colunas Emp e Tab apenas em celulares */
+    #table_div th:nth-child(2),
+    #table_div td:nth-child(2),
+    #table_div th:nth-child(3),
+    #table_div td:nth-child(3) {
+        display: none;
+    }
+
+    /* Reduz o min-width para não ter barra de rolagem horizontal */
+    #table_div table {
+        min-width: 300px;
     }
 }
