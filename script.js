@@ -282,6 +282,8 @@ function escrever_tabela(json_linhas_selecionadas){
     }
 
     let tbody = tabela.createTBody();
+    const agora = new Date();
+    
     for(let item of json_linhas_selecionadas){
         let tr = tbody.insertRow();
         tr.classList.add('horarios');
@@ -296,15 +298,26 @@ function escrever_tabela(json_linhas_selecionadas){
         tr.insertCell().innerText = item.empresa;
         tr.insertCell().innerText = item.tabela;
         tr.insertCell().innerText = item.postoControle;
-        tr.insertCell().innerHTML = `${item.horario} <span class="passed-time-dot" data-schedule-time="${item.horario}"></span>`;
         
-        let carroCell = tr.insertCell();
+        const scheduledTime = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate(), item.horario.split(':')[0], item.horario.split(':')[1], 0);
+        
+        // Lógica para exibir a bolinha vermelha
         let horarioCell = tr.insertCell();
+        horarioCell.innerHTML = `${item.horario} <span class="passed-time-dot"></span>`;
+
+        if (scheduledTime < agora) {
+            horarioCell.querySelector('.passed-time-dot').style.display = 'inline-block';
+        } else {
+            horarioCell.querySelector('.passed-time-dot').style.display = 'none';
+        }
+
+        let carroCell = tr.insertCell();
+        let realTimeCell = tr.insertCell();
         carroCell.innerHTML = `<input type="text" placeholder="Carro" class="veiculo-input" data-row-id="${item.id}" maxlength="5">`;
-        horarioCell.innerHTML = `<input type="time" class="real-time-input" data-row-id="${item.id}">`;
+        realTimeCell.innerHTML = `<input type="time" class="real-time-input" data-row-id="${item.id}">`;
 
         const veiculoInput = carroCell.querySelector('.veiculo-input');
-        const realTimeInput = horarioCell.querySelector('.real-time-input');
+        const realTimeInput = realTimeCell.querySelector('.real-time-input');
 
         // Adiciona o evento de preenchimento automático
         veiculoInput.addEventListener('change', () => {
