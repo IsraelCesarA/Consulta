@@ -82,7 +82,7 @@ body.dark-theme {
 #table_div table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 800px; /* Garante que a tabela tenha uma largura mínima para a rolagem */
+    min-width: 600px; /* Garante que a tabela tenha uma largura mínima para a rolagem */
 }
 
 #table_div thead th {
@@ -135,7 +135,7 @@ body.dark-theme {
 }
 
 /* Otimização para telas menores (celulares) */
-@media (max-width: 576px) {
+@media (max-width: 500px) {
     .container {
         padding: 5px;
     }
@@ -157,5 +157,6 @@ body.dark-theme {
         width: 70px;
     }
 }
+
 
 
