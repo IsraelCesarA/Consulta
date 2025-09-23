@@ -160,7 +160,7 @@ async function consultar_linhas_selecionadas(){
         desativar_loader();
         return;
     }
-
+    
     json_linhas_selecionadas = [];
     
     for(let linha of linhas_selecionadas){
