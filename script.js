@@ -515,3 +515,23 @@ function voltar_para_terminais(){
         if(document.getElementById('tabela')) {
              document.getElementById('tabela').remove();
         }
+        select_div.style.display = 'block';
+    }
+}
+
+voltar_terminais.addEventListener('click',voltar_para_terminais);
+
+function ativar_loader(){
+    loader.style.display = 'flex';
+    loader.innerHTML = '<div class="lds-ring"><div id="loading"></div><div></div><div></div><div></div></div>';
+    if(ver_tema()=='false'){
+        document.getElementById('loading').setAttribute('style',`box-sizing: border-box; display: block; position: absolute; width: 64px; height: 64px; margin: 8px; border: 8px solid #000; border-radius: 50%; animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite; border-color: #000 transparent transparent transparent;`);
+    }else{
+        document.getElementById('loading').setAttribute('style',`box-sizing: border-box; display: block; position: absolute; width: 64px; height: 64px; margin: 8px; border: 8px solid #fff; border-radius: 50%; animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite; border-color: #fff transparent transparent transparent;`);
+    }
+}
+
+function desativar_loader(){
+    loader.innerHTML = '';
+    loader.style.display = 'none';
+}
