@@ -26,6 +26,19 @@ body.dark-theme {
 
 }
 
+#check_list label{
+    width: 100%;
+}
+#check_list input[type=checkbox]:checked+label {
+    background-color: #b1dfbb;
+    color: #155724;
+
+}
+
+.check_list_escuro{
+color: white;
+}
+
 /* Estilos para o menu e seletor */
 #select_div {
     margin-top: 10px;
