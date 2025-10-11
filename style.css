@@ -228,6 +228,7 @@ body.dark-theme {
 
     /* Ajusta o tamanho dos inputs para ocupar o espaço disponível */
     .veiculo-input, .real-time-input {
-        max-width: 120px;
+        max-width: 12px;
     }
 }
+
