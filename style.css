@@ -1,58 +1,20 @@
-/* Estilos gerais */
+/* --- Estilos Gerais e Tema Claro --- */
 body {
-    display: flex;
-    justify-content: center;
-    max-width:1200px;
-    min-height: 100dvh;
-    background-color: #f8f9fa;
-    color: #000;
-    font-family: Arial, sans-serif;
-    margin: auto;
-}
-
-body.dark-theme {
-    background-color: #000;
-    color: #f8f9fa;
+    background-color: #f0f2f5;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .container {
-    width: 100%;
-    
-    padding: 10px;
+    max-width: 800px;
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin: 20px auto;
 }
 
-#menu{
-    padding:10px;
-
-}
-
-#check_list label{
-    width: 100%;
-}
-#check_list input[type=checkbox]:checked+label {
-    background-color: #b1dfbb;
-    color: #155724;
-
-}
-
-.check_list_escuro{
-color: white;
-}
-
-/* Estilos para o menu e seletor */
-#select_div {
-    margin-top: 10px;
-}
-
-.form-floating > label {
-    padding: 1rem 0.75rem;
-}
-
-#check_list{
-    padding-bottom: 10px;
-}
-
-/* Estilos do loader */
+/* --- Loader --- */
 #loader {
     display: none;
     position: fixed;
@@ -60,7 +22,8 @@ color: white;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(255, 255, 255, 0.7);
+    display: flex;
     justify-content: center;
     align-items: center;
     z-index: 9999;
@@ -80,31 +43,42 @@ color: white;
     width: 64px;
     height: 64px;
     margin: 8px;
-    border: 8px solid #fff;
+    border: 8px solid #0d6efd;
     border-radius: 50%;
     animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: #fff transparent transparent transparent;
+    border-color: #0d6efd transparent transparent transparent;
 }
 
 @keyframes lds-ring {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-/* Estilos para a tabela de horários */
+/* --- Checklist --- */
+#check_list {
+    display: none;
+}
+#session-checklist {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.form-check {
+    margin-bottom: 0.5rem;
+}
+
+/* --- Tabela --- */
 #table_div {
     overflow-x: auto;
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 #table_div table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 450px; /* Reduzido o mínimo para caber mais na tela */
+    min-width: 700px;
 }
 
 #table_div thead th {
@@ -112,78 +86,107 @@ color: white;
     top: 0;
     background-color: #f8f9fa;
     z-index: 10;
+    color: #333;
 }
 
 #table_div th, #table_div td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
-    font-size: 0.85em;
+    font-size: 0.9em;
     white-space: nowrap;
 }
 
-/* As classes `hide-posto` e `hide-on-mobile` foram removidas */
-
-#table_div tr:nth-child(even) {
+#table_div tbody tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
-.lost-entry {
-    font-weight: bold;
-    margin-left: 5px;
+.veiculo-input, .real-time-input {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 4px;
+    width: 100%;
+    max-width: 100px;
 }
 
-.lost-atraso {
-    color: red;
+/* --- NOVOS ESTILOS DE DESTAQUE --- */
+td.horario-atrasado {
+    background-color: #e90527 !important; /* Vermelho claro */
+}
+td.horario-adiantado {
+    background-color: #f4f804 !important; /* Amarelo claro */
 }
 
-.lost-adiantamento {
-    color: orange;
+
+/* --- TEMA ESCURO --- */
+body.dark-theme {
+    background-color: #121212;
+    color: #e0e0e0;
 }
 
-.passed-time-dot {
-    height: 10px;
-    width: 10px;
-    background-color: red;
-    border-radius: 50%;
-    display: inline-block;
-    margin-left: 5px;
+.dark-theme .container {
+    background-color: #1e1e1e;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
 
-/* Ajustes de largura para os campos e colunas */
-.veiculo-input {
-    width: 40px; /* Reduzido */
+.dark-theme .menu {
+    background-color: #2c2c2c !important;
+    border-bottom: 1px solid #444;
 }
 
-.real-time-input {
-    width: 65px; /* Reduzido */
+.dark-theme .navbar-brand,
+.dark-theme .nav-link,
+.dark-theme .form-check-label,
+.dark-theme .form-label {
+    color: #e0e0e0 !important;
 }
 
-/* Otimização para telas menores (celulares) */
+.dark-theme .form-select,
+.dark-theme .veiculo-input,
+.dark-theme .real-time-input {
+    background-color: #2c2c2c;
+    color: #e0e0e0;
+    border-color: #555;
+}
+
+.dark-theme #session-checklist {
+    border-color: #555;
+}
+
+.dark-theme #table_div th, .dark-theme #table_div td {
+    border-color: #444;
+}
+
+.dark-theme #table_div thead th {
+    background-color: #2c2c2c;
+    color: #e0e0e0;
+}
+
+.dark-theme #table_div tbody tr {
+    background-color: #1e1e1e;
+}
+
+.dark-theme #table_div tbody tr:nth-child(even) {
+    background-color: #252525;
+}
+
+.dark-theme #loader {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* --- NOVOS ESTILOS DE DESTAQUE (TEMA ESCURO) --- */
+.dark-theme td.horario-atrasado {
+    background-color: #be0707 !important; /* Vermelho escuro */
+}
+.dark-theme td.horario-adiantado {
+    background-color: #f8cb03 !important; /* Amarelo/Dourado escuro */
+}
+
+
+/* --- Responsividade --- */
 @media (max-width: 576px) {
-    .container {
-        padding: 5px;
+    .container { 
+        margin: 10px;
+        padding: 10px;
     }
-
-    .navbar-brand {
-        font-size: 1rem;
-    }
-    
-    #table_div th, #table_div td {
-        font-size: 0.75em;
-        padding: 6px;
-    }
-
-    .veiculo-input {
-        width: 40px; /* Reduzido para o celular */
-    }
-
-    .real-time-input {
-        width: 65px; /* Reduzido para o celular */
-    }
-    #consultar{
-        margin-left: 5%;
-        width: 90%;
-    }
-    
 }
