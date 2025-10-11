@@ -78,7 +78,7 @@ body {
 #table_div table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 700px;
+    min-width: 600px;
 }
 
 #table_div thead th {
@@ -190,6 +190,7 @@ body.dark-theme {
         padding: 10px;
     }
 }
+
 
 
 
