@@ -6,8 +6,8 @@ body {
 }
 
 .container {
-    max-width: 700px;
-    padding: 10px;
+    max-width: 900px;
+    padding: 15px;
     background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -23,7 +23,7 @@ body {
     width: 100%;
     height: 100%;
     background-color: rgba(255, 255, 255, 0.7);
-    display: center;
+    display: flex;
     justify-content: center;
     align-items: center;
     z-index: 9999;
@@ -78,7 +78,6 @@ body {
 #table_div table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 600px;
 }
 
 #table_div thead th {
@@ -109,12 +108,12 @@ body {
     max-width: 100px;
 }
 
-/* --- NOVOS ESTILOS DE DESTAQUE --- */
+/* Estilos de Destaque */
 td.horario-atrasado {
-    background-color: #e90527 !important; /* Vermelho claro */
+    background-color: #ffebee !important; /* Vermelho claro */
 }
 td.horario-adiantado {
-    background-color: #f4f804 !important; /* Amarelo claro */
+    background-color: #fffbeb !important; /* Amarelo claro */
 }
 
 
@@ -123,24 +122,20 @@ body.dark-theme {
     background-color: #121212;
     color: #e0e0e0;
 }
-
 .dark-theme .container {
     background-color: #1e1e1e;
     box-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
-
 .dark-theme .menu {
     background-color: #2c2c2c !important;
     border-bottom: 1px solid #444;
 }
-
 .dark-theme .navbar-brand,
 .dark-theme .nav-link,
 .dark-theme .form-check-label,
 .dark-theme .form-label {
     color: #e0e0e0 !important;
 }
-
 .dark-theme .form-select,
 .dark-theme .veiculo-input,
 .dark-theme .real-time-input {
@@ -148,49 +143,91 @@ body.dark-theme {
     color: #e0e0e0;
     border-color: #555;
 }
-
 .dark-theme #session-checklist {
     border-color: #555;
 }
-
 .dark-theme #table_div th, .dark-theme #table_div td {
     border-color: #444;
 }
-
 .dark-theme #table_div thead th {
     background-color: #2c2c2c;
     color: #e0e0e0;
 }
-
 .dark-theme #table_div tbody tr {
     background-color: #1e1e1e;
 }
-
 .dark-theme #table_div tbody tr:nth-child(even) {
     background-color: #252525;
 }
-
 .dark-theme #loader {
     background-color: rgba(0, 0, 0, 0.7);
 }
-
-/* --- NOVOS ESTILOS DE DESTAQUE (TEMA ESCURO) --- */
 .dark-theme td.horario-atrasado {
-    background-color: #be0707 !important; /* Vermelho escuro */
+    background-color: #4a1c1c !important; /* Vermelho escuro */
 }
 .dark-theme td.horario-adiantado {
-    background-color: #f8cb03 !important; /* Amarelo/Dourado escuro */
+    background-color: #544500 !important; /* Amarelo/Dourado escuro */
 }
 
 
-/* --- Responsividade --- */
-@media (max-width: 576px) {
-    .container { 
-        margin: 10px;
-        padding: 10px;
+/* --- INÍCIO DA RESPONSIVIDADE PARA CELULAR --- */
+@media (max-width: 768px) {
+    /* Esconde o cabeçalho da tabela em telas pequenas */
+    #table_div thead {
+        display: none;
+    }
+    
+    /* Transforma a tabela, linha e célula em blocos */
+    #table_div table, 
+    #table_div tbody, 
+    #table_div tr, 
+    #table_div td {
+        display: block;
+        width: 100%;
+    }
+    
+    /* Estiliza cada linha como um "cartão" */
+    #table_div tr {
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+    
+    .dark-theme #table_div tr {
+        border-color: #444;
+    }
+
+    #table_div td {
+        display: flex;
+        justify-content: space-between; /* Alinha o título à esquerda e o valor à direita */
+        align-items: center;
+        text-align: right;
+        border: none;
+        border-bottom: 1px solid #eee;
+        white-space: normal;
+        padding-left: 50%; /* Deixa espaço para o título */
+        position: relative;
+    }
+
+    .dark-theme #table_div td {
+        border-bottom-color: #333;
+    }
+
+    #table_div td:last-child {
+        border-bottom: none;
+    }
+    
+    /* Usa o atributo 'data-label' para criar os títulos de coluna */
+    #table_div td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    /* Ajusta o tamanho dos inputs para ocupar o espaço disponível */
+    .veiculo-input, .real-time-input {
+        max-width: 120px;
     }
 }
-
-
-
-
