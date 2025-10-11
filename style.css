@@ -6,7 +6,7 @@ body {
 }
 
 .container {
-    max-width: 800px;
+    max-width: 700px;
     padding: 15px;
     background-color: #ffffff;
     border-radius: 8px;
@@ -190,3 +190,4 @@ body.dark-theme {
         padding: 10px;
     }
 }
+
