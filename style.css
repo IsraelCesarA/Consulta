@@ -110,10 +110,10 @@ body {
 
 /* ATUALIZADO: Estilo para destacar LINHAS */
 tr.horario-atrasado > td {
-    background-color: #ffebee !important; /* Vermelho claro */
+    background-color: #be0707 !important; /* Vermelho claro */
 }
 tr.horario-adiantado > td {
-    background-color: #fffbeb !important; /* Amarelo claro */
+    background-color: #f8cb03 !important; /* Amarelo claro */
 }
 
 
@@ -163,10 +163,10 @@ body.dark-theme {
     background-color: rgba(0, 0, 0, 0.7);
 }
 .dark-theme tr.horario-atrasado > td {
-    background-color: #4a1c1c !important; /* Vermelho escuro */
+    background-color: #be0707 !important; /* Vermelho escuro */
 }
 .dark-theme tr.horario-adiantado > td {
-    background-color: #544500 !important; /* Amarelo/Dourado escuro */
+    background-color: #f8cb03 !important; /* Amarelo/Dourado escuro */
 }
 
 
@@ -182,3 +182,4 @@ body.dark-theme {
         max-width: 80px; /* Diminui um pouco os inputs */
     }
 }
+
