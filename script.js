@@ -1,6 +1,6 @@
 /**
  * Script para a página de Consulta de Horários.
- * Versão: 2.4.0 (Destaque de Atraso/Adiantamento para tabelas 'E')
+ * Versão: 2.5.0 (Ajuste de Resolução Mobile e Destaque de Linha)
  * Data: 11/10/2025
  */
 
@@ -220,7 +220,7 @@ function autoFillVehicle(linha, tabela, horarioPreenchido, carro) {
     });
 }
 
-/** ATUALIZADO: Lógica de destaque para atraso e adiantamento */
+/** ATUALIZADO: Aplica o destaque na linha inteira (tr) */
 function handleTimeChange(event) {
     const input = event.target;
     const horarioReal = input.value;
@@ -228,17 +228,12 @@ function handleTimeChange(event) {
     const tabela = tr.dataset.tabela;
     const horarioPrevisto = tr.dataset.horario;
 
-    const carroCell = input.parentElement.previousElementSibling;
-    const horarioCell = input.parentElement;
-
     // Remove qualquer destaque se o campo for limpo
     if (!horarioReal) {
-        carroCell.classList.remove('horario-atrasado', 'horario-adiantado');
-        horarioCell.classList.remove('horario-atrasado', 'horario-adiantado');
+        tr.classList.remove('horario-atrasado', 'horario-adiantado');
         return;
     }
     
-    // A condição agora verifica se a 'Tab' inclui a letra 'E'
     if (tabela.includes('E')) {
         const [hPrevisto, mPrevisto] = horarioPrevisto.split(':').map(Number);
         const [hReal, mReal] = horarioReal.split(':').map(Number);
@@ -249,15 +244,12 @@ function handleTimeChange(event) {
         const diferenca = minutosReal - minutosPrevisto;
 
         // Remove classes antes de adicionar a nova para evitar conflito
-        carroCell.classList.remove('horario-atrasado', 'horario-adiantado');
-        horarioCell.classList.remove('horario-atrasado', 'horario-adiantado');
+        tr.classList.remove('horario-atrasado', 'horario-adiantado');
 
         if (diferenca > 10) { // Atrasado
-            carroCell.classList.add('horario-atrasado');
-            horarioCell.classList.add('horario-atrasado');
+            tr.classList.add('horario-atrasado');
         } else if (diferenca < -10) { // Adiantado
-            carroCell.classList.add('horario-adiantado');
-            horarioCell.classList.add('horario-adiantado');
+            tr.classList.add('horario-adiantado');
         }
     }
 }
