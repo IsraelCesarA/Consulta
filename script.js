@@ -1,6 +1,6 @@
 /**
  * Script para a página de Consulta de Horários.
- * Versão: 2.3.9 (Adiciona workaround para linha 078)
+ * Versão: 2.3.9 (Corrige nome da linha 078)
  * Data: 12/10/2025
  */
 
@@ -67,10 +67,10 @@ async function carregarChecklistDoTerminal(posto) {
         
         if (posto.includes('Siqueira')) {
             if (!result.some(l => l.numero == 397)) result.push({ numero: 397, numeroNome: "397 - Cj Ceará/Paupina" });
-            // ADIÇÃO DA LINHA 078
             if (!result.some(l => l.numero == '078')) {
                 console.warn("Workaround: Adicionando manualmente a linha 078.");
-                result.push({ numero: '078', numeroNome: "078 - Canindezinho/Sofredini" });
+                // NOME CORRIGIDO AQUI
+                result.push({ numero: '078', numeroNome: "078 - Siqueira/Mucuripe/ED" });
             }
         }
 
@@ -250,7 +250,8 @@ function handleTimeChange(event) {
     const horarioPrevisto = tr.dataset.horario;
     const dadosTabela = JSON.parse(tr.dataset.dadosTabela);
     
-    const tipoDaPassagem = dadosTabela.tipo; // Usando a propriedade 'tipo' que descobrimos
+    // Altere 'NOME_DA_PROPRIEDADE_AQUI' para o nome correto que você encontrou no console
+    const tipoDaPassagem = dadosTabela.NOME_DA_PROPRIEDADE_AQUI; 
 
     if (!horarioReal) {
         tr.classList.remove('horario-atrasado', 'horario-adiantado');
