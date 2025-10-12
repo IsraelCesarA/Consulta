@@ -1,6 +1,6 @@
 /**
  * Script para a página de Consulta de Horários.
- * Versão: 4.0.2 (Correções de inicialização e eventos)
+ * Versão: 4.0.3 (Atualização das linhas de fim de semana)
  * Data: 12/10/2025
  */
 
@@ -17,7 +17,7 @@ const voltarTerminaisBtn = document.getElementById('voltar_terminais');
 
 const STORAGE_KEY = 'dados_consulta_horarios';
 
-// --- NOVA ESTRUTURA PARA LINHAS DE FIM DE SEMANA ---
+// --- ATUALIZAÇÃO DAS LINHAS DE FIM DE SEMANA ---
 const LINHAS_DE_FIM_DE_SEMANA = {
     "Parangaba": [
         { codigo: '172', nome: "172 - Antônio Bezerra/Lagoa/Parangaba" },
@@ -26,16 +26,15 @@ const LINHAS_DE_FIM_DE_SEMANA = {
     ],
     "Antônio Bezerra": [
         { codigo: '172', nome: "172 - Antônio Bezerra/Lagoa/Parangaba" },
-        { codigo: '130', nome: "130 - CONJ. ALVORADA / BEZERRA DE MENEZES" }
+        { codigo: '130', nome: "1130-Náutico/Vila do Mar/Antônio Bezerra/SFS" }
     ],
     "Siqueira": [
-        { codigo: '397', nome: "397 - Cj Ceará/Paupina" },
+        { codigo: '397', nome: " 397-Jardim Jatobá II/Siqueira" },
         { codigo: '078', nome: "078 - Siqueira/Mucuripe/ED" },
         { codigo: '355', nome: "355 - Siqueira/José Bastos/Centro/ED" }
     ],
     "Jose de Alencar": [
-        { codigo: '1390', nome: "1390 - Parangaba/João Pessoa/Centro/ED" },
-        { codigo: '157', nome: "157 - Rota a Confirmar" }
+        { codigo: '1390', nome: "1390 - Parangaba/João Pessoa/Centro/ED" }
     ]
 };
 
