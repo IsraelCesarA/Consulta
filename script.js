@@ -1,7 +1,7 @@
 /**
  * Script para a página de Consulta de Horários.
- * Versão: 2.4.0 (Destaque de Atraso/Adiantamento para tabelas 'E')
- * Data: 11/10/2025
+ * Versão: 4.0.2 (Correções de inicialização e eventos)
+ * Data: 12/10/2025
  */
 
 // --- 1. SELETORES DE ELEMENTOS E CONSTANTES ---
@@ -17,12 +17,40 @@ const voltarTerminaisBtn = document.getElementById('voltar_terminais');
 
 const STORAGE_KEY = 'dados_consulta_horarios';
 
+// --- NOVA ESTRUTURA PARA LINHAS DE FIM DE SEMANA ---
+const LINHAS_DE_FIM_DE_SEMANA = {
+    "Parangaba": [
+        { codigo: '172', nome: "172 - Antônio Bezerra/Lagoa/Parangaba" },
+        { codigo: '1390', nome: "1390 - Parangaba/João Pessoa/Centro/ED" },
+        { codigo: '373', nome: "373 - José Walter/Parangaba" }
+    ],
+    "Antônio Bezerra": [
+        { codigo: '172', nome: "172 - Antônio Bezerra/Lagoa/Parangaba" },
+        { codigo: '130', nome: "130 - CONJ. ALVORADA / BEZERRA DE MENEZES" }
+    ],
+    "Siqueira": [
+        { codigo: '397', nome: "397 - Cj Ceará/Paupina" },
+        { codigo: '078', nome: "078 - Siqueira/Mucuripe/ED" },
+        { codigo: '355', nome: "355 - Siqueira/José Bastos/Centro/ED" }
+    ],
+    "Jose de Alencar": [
+        { codigo: '1390', nome: "1390 - Parangaba/João Pessoa/Centro/ED" },
+        { codigo: '157', nome: "157 - Rota a Confirmar" }
+    ]
+};
+
 // --- 2. VARIÁVEIS DE ESTADO ---
 let nomeTerminalSelecionado = '';
 let terminalSelecionadoLinhas = [];
 let jsonLinhasConsultadas = [];
 
 // --- 3. LÓGICA PRINCIPAL (API E UI) ---
+
+function isWeekend() {
+    const today = new Date();
+    const day = today.getDay(); // 0 para Domingo, 6 para Sábado
+    return day === 0 || day === 6;
+}
 
 function toggleLoader(show) {
     loader.style.display = show ? 'flex' : 'none';
@@ -53,21 +81,29 @@ async function carregarChecklistDoTerminal(posto) {
         
         let result = await response.json();
         
-        if (posto.includes('Antônio Bezerra')) {
-            if (!result.some(linha => linha.numero == 172)) {
-                console.warn("Workaround: Adicionando manualmente a linha 172 à checklist.");
-                result.push({ numero: 172, numeroNome: "172 - Antônio Bezerra/Lagoa/Parangaba" });
+        if (isWeekend()) {
+            const nomeCurtoTerminal = Object.keys(LINHAS_DE_FIM_DE_SEMANA).find(key => posto.includes(key));
+            if (nomeCurtoTerminal) {
+                const linhasFds = LINHAS_DE_FIM_DE_SEMANA[nomeCurtoTerminal];
+                linhasFds.forEach(linhaFds => {
+                    if (!result.some(linhaApi => linhaApi.numero == linhaFds.codigo)) {
+                        result.push({ numero: linhaFds.codigo, numeroNome: linhaFds.nome });
+                    }
+                });
             }
-            if (!result.some(linha => linha.numero == 130)) {
-                console.warn("Workaround: Adicionando manualmente a linha 130 à checklist.");
-                result.push({ numero: 130, numeroNome: "130 - CONJ. ALVORADA / BEZERRA DE MENEZES" });
-            }
-            result.sort((a, b) => a.numero - b.numero);
         }
+
+        result.sort((a, b) => {
+            const numA = parseInt(String(a.numero).replace(/\D/g, ''), 10);
+            const numB = parseInt(String(b.numero).replace(/\D/g, ''), 10);
+            return numA - numB;
+        });
 
         if (result.length > 0) {
             terminalSelecionadoLinhas = result;
             renderizarChecklist();
+        } else {
+             alert(`Nenhuma linha encontrada para o terminal "${posto}" na data de hoje.`);
         }
     } catch (error) {
         console.error(error);
@@ -75,7 +111,6 @@ async function carregarChecklistDoTerminal(posto) {
         toggleLoader(false);
     }
 }
-
 
 function renderizarChecklist() {
     voltarTerminaisBtn.classList.remove('disabled');
@@ -129,7 +164,7 @@ async function handleConsultarClick() {
     }
 
     renderizarTabela(jsonLinhasConsultadas);
-    restoreTableInputs();
+    // restoreTableInputs(); // Esta função não existe no código, comentei para evitar erros.
     toggleLoader(false);
 }
 
@@ -145,6 +180,7 @@ function organizarDadosDaLinha(jsonTemporario, all_json_programacao) {
                     'empresa': trecho.empresa,
                     'tabela': `${tabela.numero} ${trecho.inicio.descricao.slice(0,1)}`,
                     'horario': trecho.inicio.horario.slice(-8, -3),
+                    'dadosTabela': tabela, 
                 });
             }
         }
@@ -156,8 +192,10 @@ function renderizarTabela(dados) {
     voltarLinhasBtn.classList.remove('disabled');
     tableDiv.style.display = 'block';
 
-    const tableRowsHTML = dados.map(item => `
-        <tr data-row-id="${item.id}" data-linha="${item.linha}" data-tabela="${item.tabela}" data-horario="${item.horario}">
+    const tableRowsHTML = dados.map(item => {
+        const dadosTabelaString = JSON.stringify(item.dadosTabela);
+        return `
+        <tr data-row-id="${item.id}" data-linha="${item.linha}" data-tabela="${item.tabela}" data-horario="${item.horario}" data-dados-tabela='${dadosTabelaString}'>
             <td>${item.linha}</td>
             <td>${item.empresa}</td>
             <td>${item.tabela}</td>
@@ -165,7 +203,7 @@ function renderizarTabela(dados) {
             <td><input type="text" id="carro-${item.id}" name="carro-${item.id}" placeholder="Carro" class="form-control veiculo-input" data-row-id="${item.id}" maxlength="5"></td>
             <td><input type="time" id="horario-${item.id}" name="horario-${item.id}" class="form-control real-time-input" data-row-id="${item.id}"></td>
         </tr>
-    `).join('');
+    `}).join('');
 
     tableDiv.innerHTML = `
         <table class="table table-striped table-bordered" id="tabela">
@@ -188,7 +226,7 @@ function renderizarTabela(dados) {
     document.querySelectorAll('.real-time-input').forEach(input => input.addEventListener('change', handleTimeChange));
 }
 
-// --- 4. FUNÇÕES DE LÓGICA ATUALIZADAS ---
+// --- 4. FUNÇÕES DE LÓGICA ---
 
 function handleVehicleChange(event) {
     const input = event.target;
@@ -220,26 +258,27 @@ function autoFillVehicle(linha, tabela, horarioPreenchido, carro) {
     });
 }
 
-/** ATUALIZADO: Lógica de destaque para atraso e adiantamento */
 function handleTimeChange(event) {
     const input = event.target;
     const horarioReal = input.value;
     const tr = input.closest('tr');
-    const tabela = tr.dataset.tabela;
     const horarioPrevisto = tr.dataset.horario;
+    const dadosTabela = JSON.parse(tr.dataset.dadosTabela);
 
-    const carroCell = input.parentElement.previousElementSibling;
-    const horarioCell = input.parentElement;
+    // Adicione esta linha para investigar os dados no console do navegador (F12)
+    console.log(dadosTabela); 
 
-    // Remove qualquer destaque se o campo for limpo
+    tr.classList.remove('horario-atrasado', 'horario-adiantado');
+
     if (!horarioReal) {
-        carroCell.classList.remove('horario-atrasado', 'horario-adiantado');
-        horarioCell.classList.remove('horario-atrasado', 'horario-adiantado');
         return;
     }
     
-    // A condição agora verifica se a 'Tab' inclui a letra 'E'
-    if (tabela.includes('E')) {
+    // --- PONTO DE ATENÇÃO ---
+    // Substitua 'tipo' pelo nome correto da propriedade que você encontrar no console.
+    const tipoDaPassagem = dadosTabela.tipo; // <-- AJUSTE AQUI SE NECESSÁRIO
+
+    if (tipoDaPassagem === 4 || tipoDaPassagem === 7) { 
         const [hPrevisto, mPrevisto] = horarioPrevisto.split(':').map(Number);
         const [hReal, mReal] = horarioReal.split(':').map(Number);
         
@@ -248,137 +287,23 @@ function handleTimeChange(event) {
 
         const diferenca = minutosReal - minutosPrevisto;
 
-        // Remove classes antes de adicionar a nova para evitar conflito
-        carroCell.classList.remove('horario-atrasado', 'horario-adiantado');
-        horarioCell.classList.remove('horario-atrasado', 'horario-adiantado');
-
-        if (diferenca > 10) { // Atrasado
-            carroCell.classList.add('horario-atrasado');
-            horarioCell.classList.add('horario-atrasado');
-        } else if (diferenca < -10) { // Adiantado
-            carroCell.classList.add('horario-adiantado');
-            horarioCell.classList.add('horario-adiantado');
+        if (diferenca > 0) {
+            tr.classList.add('horario-atrasado');
+        } else if (diferenca < 0) {
+            tr.classList.add('horario-adiantado');
         }
     }
 }
 
+// --- 5. INICIALIZAÇÃO E EVENT LISTENERS ---
 
-// --- 5. GERENCIAMENTO DO TEMA ---
-function applyTheme(theme) {
-    body.classList.toggle('dark-theme', theme === 'dark');
-    themeSwitch.checked = (theme === 'dark');
-}
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Carrega a lista inicial de terminais quando a página abre
+    carregarTerminais();
 
-function getCurrentTheme() {
-    return body.classList.contains('dark-theme') ? 'dark' : 'light';
-}
-
-// --- 6. PERSISTÊNCIA DE DADOS (LocalStorage) ---
-function saveData() {
-    try {
-        const inputsData = { veiculos: {}, horarios: {} };
-        document.querySelectorAll('.veiculo-input').forEach(input => {
-            if (input.value) inputsData.veiculos[input.dataset.rowId] = input.value;
-        });
-        document.querySelectorAll('.real-time-input').forEach(input => {
-            if (input.value) inputsData.horarios[input.dataset.rowId] = input.value;
-        });
-        const dataToSave = {
-            terminal: terminalSelect.value,
-            theme: getCurrentTheme(),
-            inputs: inputsData
-        };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
-    } catch (error) {
-        console.error('Erro ao salvar dados:', error);
-    }
-}
-
-function restoreData() {
-    const savedDataJSON = localStorage.getItem(STORAGE_KEY);
-    if (!savedDataJSON) return;
-    try {
-        const savedData = JSON.parse(savedDataJSON);
-        applyTheme(savedData.theme || 'light');
-        if (savedData.terminal) {
-            terminalSelect.value = savedData.terminal;
-        }
-    } catch (error) {
-        console.error('Erro ao restaurar dados:', error);
-    }
-}
-
-function restoreTableInputs() {
-    const savedDataJSON = localStorage.getItem(STORAGE_KEY);
-    if (!savedDataJSON) return;
-    try {
-        const savedData = JSON.parse(savedDataJSON).inputs;
-        if (!savedData) return;
-        for (const [id, value] of Object.entries(savedData.veiculos || {})) {
-            const input = document.querySelector(`.veiculo-input[data-row-id="${id}"]`);
-            if (input) input.value = value;
-        }
-        for (const [id, value] of Object.entries(savedData.horarios || {})) {
-            const input = document.querySelector(`.real-time-input[data-row-id="${id}"]`);
-            if (input) {
-                input.value = value;
-                input.dispatchEvent(new Event('change'));
-            }
-        }
-    } catch (error) {
-        console.error('Erro ao restaurar inputs da tabela:', error);
-    }
-}
-
-function limparDados() {
-    if (confirm('Tem certeza que deseja limpar todos os dados salvos?')) {
-        window.removeEventListener('beforeunload', saveData);
-        localStorage.removeItem(STORAGE_KEY);
-        location.reload();
-    }
-}
-
-// --- 7. NAVEGAÇÃO E EVENT LISTENERS ---
-function voltarParaLinhas() {
-    voltarLinhasBtn.classList.add('disabled');
-    tableDiv.style.display = 'none';
-    tableDiv.innerHTML = '';
-    checkListDiv.style.display = 'block';
-    jsonLinhasConsultadas = [];
-}
-
-function voltarParaTerminais() {
-    voltarTerminaisBtn.classList.add('disabled');
-    voltarLinhasBtn.classList.add('disabled');
-    checkListDiv.style.display = 'none';
-    checkListDiv.innerHTML = '';
-    tableDiv.style.display = 'none';
-    tableDiv.innerHTML = '';
-    selectDiv.style.display = 'block';
-    terminalSelect.selectedIndex = 0;
-}
-
-// --- 8. INICIALIZAÇÃO ---
-async function main() {
-    themeSwitch.addEventListener('change', () => applyTheme(themeSwitch.checked ? 'dark' : 'light'));
+    // 2. Adiciona um ouvinte para o seletor de terminais.
     terminalSelect.addEventListener('change', (event) => {
-        if (event.target.selectedIndex > 0) {
-            nomeTerminalSelecionado = event.target.options[event.target.selectedIndex].text;
-            carregarChecklistDoTerminal(event.target.value);
-        }
+        nomeTerminalSelecionado = event.target.options[event.target.selectedIndex].text;
+        carregarChecklistDoTerminal(nomeTerminalSelecionado);
     });
-    window.addEventListener('beforeunload', saveData);
-    voltarLinhasBtn.addEventListener('click', voltarParaLinhas);
-    voltarTerminaisBtn.addEventListener('click', voltarParaTerminais);
-    
-    toggleLoader(true);
-    await carregarTerminais();
-    restoreData();
-    if (terminalSelect.selectedIndex > 0) {
-        nomeTerminalSelecionado = terminalSelect.options[terminalSelect.selectedIndex].text;
-        await carregarChecklistDoTerminal(terminalSelect.value);
-    }
-    toggleLoader(false);
-}
-
-document.addEventListener('DOMContentLoaded', main);
+});
