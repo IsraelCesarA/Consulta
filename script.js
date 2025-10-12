@@ -1,7 +1,7 @@
 /**
  * Script para a página de Consulta de Horários.
- * Versão: 2.3.10 (Corrige nome da linha 355)
- * Data: 12/10/2025
+ * Versão: 2.4.0 (Destaque de Atraso/Adiantamento para tabelas 'E')
+ * Data: 11/10/2025
  */
 
 // --- 1. SELETORES DE ELEMENTOS E CONSTANTES ---
@@ -53,42 +53,17 @@ async function carregarChecklistDoTerminal(posto) {
         
         let result = await response.json();
         
-        // *** INÍCIO DA SOLUÇÃO TEMPORÁRIA ***
-        if (posto.includes('Parangaba')) {
-            if (!result.some(l => l.numero == 172)) result.push({ numero: 172, numeroNome: "172 - Antônio Bezerra/Lagoa/Parangaba" });
-            if (!result.some(l => l.numero == 1390)) result.push({ numero: 1390, numeroNome: "1390 - Parangaba/João Pessoa/Centro/ED" });
-            if (!result.some(l => l.numero == 373)) result.push({ numero: 373, numeroNome: "373 - José Walter/Parangaba" });
-        }
-        
         if (posto.includes('Antônio Bezerra')) {
-            if (!result.some(l => l.numero == 172)) result.push({ numero: 172, numeroNome: "172 - Antônio Bezerra/Lagoa/Parangaba" });
-            if (!result.some(l => l.numero == 130)) result.push({ numero: 130, numeroNome: "130 - CONJ. ALVORADA / BEZERRA DE MENEZES" });
-        }
-        
-        if (posto.includes('Siqueira')) {
-            if (!result.some(l => l.numero == 397)) result.push({ numero: 397, numeroNome: "397 - Cj Ceará/Paupina" });
-            if (!result.some(l => l.numero == '078')) result.push({ numero: '078', numeroNome: "078 - Siqueira/Mucuripe/ED" });
-            if (!result.some(l => l.numero == 355)) {
-                console.warn("Workaround: Adicionando manualmente a linha 355.");
-                // NOME CORRIGIDO AQUI
-                result.push({ numero: 355, numeroNome: "355 - Siqueira/José Bastos/Centro/ED" });
+            if (!result.some(linha => linha.numero == 172)) {
+                console.warn("Workaround: Adicionando manualmente a linha 172 à checklist.");
+                result.push({ numero: 172, numeroNome: "172 - Antônio Bezerra/Lagoa/Parangaba" });
             }
-        }
-
-        if (posto.includes('Jose de Alencar')) {
-            if (!result.some(l => l.numero == 1390)) result.push({ numero: 1390, numeroNome: "1390 - Parangaba/João Pessoa/Centro/ED" });
-            if (!result.some(l => l.numero == 157)) {
-                console.warn("Workaround: Adicionando manualmente a linha 157.");
-                result.push({ numero: 157, numeroNome: "157 - Rota a Confirmar" });
+            if (!result.some(linha => linha.numero == 130)) {
+                console.warn("Workaround: Adicionando manualmente a linha 130 à checklist.");
+                result.push({ numero: 130, numeroNome: "130 - CONJ. ALVORADA / BEZERRA DE MENEZES" });
             }
+            result.sort((a, b) => a.numero - b.numero);
         }
-
-        result.sort((a, b) => {
-            const numA = parseInt(String(a.numero).replace(/\D/g, ''), 10);
-            const numB = parseInt(String(b.numero).replace(/\D/g, ''), 10);
-            return numA - numB;
-        });
-        // *** FIM DA SOLUÇÃO TEMPORÁRIA ***
 
         if (result.length > 0) {
             terminalSelecionadoLinhas = result;
@@ -170,7 +145,6 @@ function organizarDadosDaLinha(jsonTemporario, all_json_programacao) {
                     'empresa': trecho.empresa,
                     'tabela': `${tabela.numero} ${trecho.inicio.descricao.slice(0,1)}`,
                     'horario': trecho.inicio.horario.slice(-8, -3),
-                    'dadosTabela': tabela, 
                 });
             }
         }
@@ -182,10 +156,8 @@ function renderizarTabela(dados) {
     voltarLinhasBtn.classList.remove('disabled');
     tableDiv.style.display = 'block';
 
-    const tableRowsHTML = dados.map(item => {
-        const dadosTabelaString = JSON.stringify(item.dadosTabela);
-        return `
-        <tr data-row-id="${item.id}" data-linha="${item.linha}" data-tabela="${item.tabela}" data-horario="${item.horario}" data-dados-tabela='${dadosTabelaString}'>
+    const tableRowsHTML = dados.map(item => `
+        <tr data-row-id="${item.id}" data-linha="${item.linha}" data-tabela="${item.tabela}" data-horario="${item.horario}">
             <td>${item.linha}</td>
             <td>${item.empresa}</td>
             <td>${item.tabela}</td>
@@ -193,7 +165,7 @@ function renderizarTabela(dados) {
             <td><input type="text" id="carro-${item.id}" name="carro-${item.id}" placeholder="Carro" class="form-control veiculo-input" data-row-id="${item.id}" maxlength="5"></td>
             <td><input type="time" id="horario-${item.id}" name="horario-${item.id}" class="form-control real-time-input" data-row-id="${item.id}"></td>
         </tr>
-    `}).join('');
+    `).join('');
 
     tableDiv.innerHTML = `
         <table class="table table-striped table-bordered" id="tabela">
@@ -216,7 +188,7 @@ function renderizarTabela(dados) {
     document.querySelectorAll('.real-time-input').forEach(input => input.addEventListener('change', handleTimeChange));
 }
 
-// --- 4. FUNÇÕES DE LÓGICA ---
+// --- 4. FUNÇÕES DE LÓGICA ATUALIZADAS ---
 
 function handleVehicleChange(event) {
     const input = event.target;
@@ -248,22 +220,26 @@ function autoFillVehicle(linha, tabela, horarioPreenchido, carro) {
     });
 }
 
+/** ATUALIZADO: Lógica de destaque para atraso e adiantamento */
 function handleTimeChange(event) {
     const input = event.target;
     const horarioReal = input.value;
     const tr = input.closest('tr');
+    const tabela = tr.dataset.tabela;
     const horarioPrevisto = tr.dataset.horario;
-    const dadosTabela = JSON.parse(tr.dataset.dadosTabela);
-    
-    // Altere 'NOME_DA_PROPRIEDADE_AQUI' para o nome correto que você encontrou no console
-    const tipoDaPassagem = dadosTabela.NOME_DA_PROPRIEDADE_AQUI; 
 
+    const carroCell = input.parentElement.previousElementSibling;
+    const horarioCell = input.parentElement;
+
+    // Remove qualquer destaque se o campo for limpo
     if (!horarioReal) {
-        tr.classList.remove('horario-atrasado', 'horario-adiantado');
+        carroCell.classList.remove('horario-atrasado', 'horario-adiantado');
+        horarioCell.classList.remove('horario-atrasado', 'horario-adiantado');
         return;
     }
     
-    if (tipoDaPassagem === 4 || tipoDaPassagem === 7) { 
+    // A condição agora verifica se a 'Tab' inclui a letra 'E'
+    if (tabela.includes('E')) {
         const [hPrevisto, mPrevisto] = horarioPrevisto.split(':').map(Number);
         const [hReal, mReal] = horarioReal.split(':').map(Number);
         
@@ -272,15 +248,20 @@ function handleTimeChange(event) {
 
         const diferenca = minutosReal - minutosPrevisto;
 
-        tr.classList.remove('horario-atrasado', 'horario-adiantado');
+        // Remove classes antes de adicionar a nova para evitar conflito
+        carroCell.classList.remove('horario-atrasado', 'horario-adiantado');
+        horarioCell.classList.remove('horario-atrasado', 'horario-adiantado');
 
-        if (diferenca > 10) {
-            tr.classList.add('horario-atrasado');
-        } else if (diferenca < -10) {
-            tr.classList.add('horario-adiantado');
+        if (diferenca > 10) { // Atrasado
+            carroCell.classList.add('horario-atrasado');
+            horarioCell.classList.add('horario-atrasado');
+        } else if (diferenca < -10) { // Adiantado
+            carroCell.classList.add('horario-adiantado');
+            horarioCell.classList.add('horario-adiantado');
         }
     }
 }
+
 
 // --- 5. GERENCIAMENTO DO TEMA ---
 function applyTheme(theme) {
@@ -394,7 +375,7 @@ async function main() {
     await carregarTerminais();
     restoreData();
     if (terminalSelect.selectedIndex > 0) {
-        nomeTerminalSelecionado = terminalSelect.options[event.target.selectedIndex].text;
+        nomeTerminalSelecionado = terminalSelect.options[terminalSelect.selectedIndex].text;
         await carregarChecklistDoTerminal(terminalSelect.value);
     }
     toggleLoader(false);
