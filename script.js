@@ -1,6 +1,6 @@
 /**
  * Script para a página de Consulta de Horários.
- * Versão: 2.3.9 (Corrige nome da linha 078)
+ * Versão: 2.3.10 (Corrige nome da linha 355)
  * Data: 12/10/2025
  */
 
@@ -67,15 +67,20 @@ async function carregarChecklistDoTerminal(posto) {
         
         if (posto.includes('Siqueira')) {
             if (!result.some(l => l.numero == 397)) result.push({ numero: 397, numeroNome: "397 - Cj Ceará/Paupina" });
-            if (!result.some(l => l.numero == '078')) {
-                console.warn("Workaround: Adicionando manualmente a linha 078.");
+            if (!result.some(l => l.numero == '078')) result.push({ numero: '078', numeroNome: "078 - Siqueira/Mucuripe/ED" });
+            if (!result.some(l => l.numero == 355)) {
+                console.warn("Workaround: Adicionando manualmente a linha 355.");
                 // NOME CORRIGIDO AQUI
-                result.push({ numero: '078', numeroNome: "078 - Siqueira/Mucuripe/ED" });
+                result.push({ numero: 355, numeroNome: "355 - Siqueira/José Bastos/Centro/ED" });
             }
         }
 
         if (posto.includes('Jose de Alencar')) {
             if (!result.some(l => l.numero == 1390)) result.push({ numero: 1390, numeroNome: "1390 - Parangaba/João Pessoa/Centro/ED" });
+            if (!result.some(l => l.numero == 157)) {
+                console.warn("Workaround: Adicionando manualmente a linha 157.");
+                result.push({ numero: 157, numeroNome: "157 - Rota a Confirmar" });
+            }
         }
 
         result.sort((a, b) => {
@@ -389,7 +394,7 @@ async function main() {
     await carregarTerminais();
     restoreData();
     if (terminalSelect.selectedIndex > 0) {
-        nomeTerminalSelecionado = terminalSelect.options[terminalSelect.selectedIndex].text;
+        nomeTerminalSelecionado = terminalSelect.options[event.target.selectedIndex].text;
         await carregarChecklistDoTerminal(terminalSelect.value);
     }
     toggleLoader(false);
