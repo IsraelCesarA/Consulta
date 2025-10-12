@@ -1,6 +1,6 @@
 /**
  * Script para a página de Consulta de Horários.
- * Versão: 2.3.8 (Ajusta lista de workarounds)
+ * Versão: 2.3.9 (Adiciona workaround para linha 078)
  * Data: 12/10/2025
  */
 
@@ -44,7 +44,6 @@ async function carregarTerminais() {
     }
 }
 
-/** ATUALIZADO: Contém a nova lista de workarounds para as linhas faltantes */
 async function carregarChecklistDoTerminal(posto) {
     toggleLoader(true);
     try {
@@ -54,7 +53,7 @@ async function carregarChecklistDoTerminal(posto) {
         
         let result = await response.json();
         
-        // *** INÍCIO DA SOLUÇÃO TEMPORÁRIA (AJUSTADA) ***
+        // *** INÍCIO DA SOLUÇÃO TEMPORÁRIA ***
         if (posto.includes('Parangaba')) {
             if (!result.some(l => l.numero == 172)) result.push({ numero: 172, numeroNome: "172 - Antônio Bezerra/Lagoa/Parangaba" });
             if (!result.some(l => l.numero == 1390)) result.push({ numero: 1390, numeroNome: "1390 - Parangaba/João Pessoa/Centro/ED" });
@@ -68,6 +67,11 @@ async function carregarChecklistDoTerminal(posto) {
         
         if (posto.includes('Siqueira')) {
             if (!result.some(l => l.numero == 397)) result.push({ numero: 397, numeroNome: "397 - Cj Ceará/Paupina" });
+            // ADIÇÃO DA LINHA 078
+            if (!result.some(l => l.numero == '078')) {
+                console.warn("Workaround: Adicionando manualmente a linha 078.");
+                result.push({ numero: '078', numeroNome: "078 - Canindezinho/Sofredini" });
+            }
         }
 
         if (posto.includes('Jose de Alencar')) {
@@ -246,8 +250,7 @@ function handleTimeChange(event) {
     const horarioPrevisto = tr.dataset.horario;
     const dadosTabela = JSON.parse(tr.dataset.dadosTabela);
     
-    // Altere 'NOME_DA_PROPRIEDADE_AQUI' para o nome correto que você encontrou no console
-    const tipoDaPassagem = dadosTabela.NOME_DA_PROPRIEDADE_AQUI; 
+    const tipoDaPassagem = dadosTabela.tipo; // Usando a propriedade 'tipo' que descobrimos
 
     if (!horarioReal) {
         tr.classList.remove('horario-atrasado', 'horario-adiantado');
